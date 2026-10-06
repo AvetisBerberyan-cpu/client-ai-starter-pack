@@ -1,0 +1,27 @@
+[
+  {
+    "timestamp": "2026-10-06T13:22:19.815031+00:00",
+    "request_id": "ASK-6D7373621CD9",
+    "order_ref": "ASK-0868EE95E05B",
+    "source_file": "interactive",
+    "input": "Please send box of  individual CAB-1 cables",
+    "source": "live_groq",
+    "model": "openai/gpt-oss-120b",
+    "response": "{\"product_query\":\"CAB-1\",\"quantity\":null,\"reason\":\"missing quantity\"}",
+    "validated_result": {
+      "status": "needs_clarification",
+      "reason": "missing quantity",
+      "matches": [
+        {
+          "sku": "CAB-1",
+          "name": "USB-C cable 1 m",
+          "unit_cents": 2000
+        }
+      ],
+      "validation_findings": [
+        "No safe positive whole-number item count was extracted."
+      ],
+      "clarification_draft": "Please confirm the number of individual items requested."
+    }
+  }
+]
