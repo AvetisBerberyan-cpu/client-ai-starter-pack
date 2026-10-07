@@ -16,7 +16,7 @@ source tasks/orders/.venv/bin/activate
 python -m pip install -r tasks/orders/requirements.txt
 ```
 
-Copy the variable names from `.env.example` to a local `tasks/orders/.env` and set `GROQ_API_KEY`. You can set `GROQ_MODEL`, `GROQ_TEMPERATURE`, and `GROQ_MAX_TOKENS` there too. The defaults are `llama-3.3-70b-versatile`, `0.1`, and `300`. Keep `.env` private and out of Git; only `.env.example` belongs in the repository.
+Copy the variable names from `.env.example` to a local `tasks/orders/.env` and set `GROQ_API_KEY`. You can set `GROQ_MODEL`, `GROQ_TEMPERATURE`, and `GROQ_MAX_TOKENS` there too. The defaults are `openai/gpt-oss-120b`, `0.1`, and `300`. The default model supports Groq strict JSON Schema output. Keep `.env` private and out of Git; only `.env.example` belongs in the repository.
 
 ## Run one order
 
@@ -59,7 +59,7 @@ python tasks/orders/main.py --review REQUEST_ID --field sku --value CAB-2
 
 ## Verify behavior
 
-Run five independent reference checks. This makes live model calls for the normal, unknown-product, and ambiguous-product/quantity examples; checks a duplicate; and applies a reviewer correction to the normal draft.
+Run five independently specified reference behaviors. This makes live model calls for the normal and bulk-price orders, unknown product, ambiguous package quantity, and duplicate order reference; it also reprocesses a stable request ID and applies a reviewer correction to the normal draft.
 
 ```bash
 python tasks/orders/main.py --check
@@ -101,7 +101,7 @@ This audit command only uses entries tagged `live_groq` in `model_calls.json`. I
 
 A request follows this sequence:
 
-1. **Load input and catalog.** `pipeline.all_requests()` reads the original requests in `seed.json` and the six added requests in `requests.json`. The catalog comes from `config.py` and `seed.json`. Stable request IDs and original message text are retained. Malformed request entries are stored as failed inputs so other entries can still be processed.
+1. **Load input and catalog.** `pipeline.all_requests()` reads the original four requests in `seed.json` and the six added requests in `requests.json`. The catalog comes from `config.py` and `seed.json`. Stable request IDs and original message text are retained. Malformed request entries are stored as failed inputs so other entries can still be processed.
 2. **Ask the model to extract.** `llm.model_client()` configures LangChain `ChatGroq` using environment variables. `llm.extract_order()` requests JSON containing `product_query`, `quantity`, and `reason`. The model is told not to choose a SKU or infer package sizes. Missing credentials, model errors, malformed JSON, and invalid fields are recorded as failures; none cause a local parsing fallback.
 3. **Look up local evidence.** `domain.local_catalog_lookup()` searches only the supplied catalog. A SKU or product phrase can return one, multiple, or no entries. The proposal records matching catalog entries as evidence. A model claim cannot add a product to the catalog.
 4. **Validate and calculate.** `domain.evaluate()` keeps uncertain matches unresolved, requires a positive whole-number count, and rejects counts inferred from words such as “boxes” or “packs.” `domain.price()` uses the catalog unit price and applies a 10% discount to a line of at least 10 individual items, using integer cents and half-up rounding. The code creates clarification drafts for unresolved requests.
@@ -147,3 +147,13 @@ The four starter requests are preserved, and six fictional examples extend the s
 The supplied rules do not define a tie-breaker for partial product descriptions, package sizes, multiple order lines in one message, or attachment interpretation. This app supports one text order line per request. Attachment OCR, authentication, live email/ERP integration, and remote hosting are outside this implementation. The review server binds to localhost by default.
 
 The practical improvement suggested by the examples is to ask customers for a catalog SKU and a count of individual items in the intake form. This would reduce both generic product matches and package-quantity clarifications.
+
+## Simulation and independent checks
+
+The six additions in `requests.json` are handwritten fictional examples; no random generator or seed was used. They retain the supplied catalog and pricing rules. `reference-cases.json` records expected behavior separately from application outputs. Expected totals are calculated directly from the supplied cents: two CAB-1 cables are 4,000 cents; ten are 18,000 cents after a 2,000-cent discount; twelve are 21,600 cents after a 2,400-cent discount; two HUB-1 units are 10,000 cents. The reference command writes observed outcomes to `reference-check-report.json` only when run.
+
+## AI usage note
+
+Codex was used to build and inspect the Python application, documentation, and sample data. The live extraction integration uses Groq through LangChain `ChatGroq`; saved real calls in `model_calls.json` record the model ID and response. A representative instruction asks the model to extract `product_query`, `quantity`, and `reason`, never infer package sizes, and never choose a SKU. One review correction followed the saved `USB Hubs` response: extraction returned the intended product and count, but exact token matching failed against catalog `USB hub`; the local matcher was improved to handle that simple plural. Application validation and independently calculated reference cases are used to check the result.
+
+Preparation time was not tracked. For a short walkthrough, see [`WALKTHROUGH.md`](WALKTHROUGH.md).

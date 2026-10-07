@@ -1,0 +1,35 @@
+{
+  "generation_method": "Handwritten fictional email-style examples; no random generator or seed was used.",
+  "requests": [
+    {
+      "id": "R5",
+      "order_ref": "O5",
+      "text": "Could you send four USB hubs, please?"
+    },
+    {
+      "id": "R6",
+      "order_ref": "O6",
+      "text": "Please ship ten individual CAB-1 cables."
+    },
+    {
+      "id": "R7",
+      "order_ref": "O7",
+      "text": "We need 3 USB-C cables."
+    },
+    {
+      "id": "R8",
+      "order_ref": "O8",
+      "text": "Please send one Moon adapter."
+    },
+    {
+      "id": "R9",
+      "order_ref": "O9",
+      "text": "Could you send 2 USB-C cable 1 m units?"
+    },
+    {
+      "id": "R10",
+      "order_ref": "O10",
+      "text": "Please send 3 USB hubs."
+    }
+  ]
+}

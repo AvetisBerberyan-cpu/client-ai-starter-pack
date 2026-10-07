@@ -35,6 +35,28 @@ def run_reference_check() -> dict[str, Any]:
                 }
                 report.append({"id": row["id"], "expected": expected, "observed": {"status": row["status"], "draft": row.get("draft"), "reason": row.get("reason")}, "checks": checks, "passed": all(checks.values())})
 
+            normal_case = next(case for case in references if case["id"] == "REF-NORMAL")
+            conn = storage.ensure_db()
+            count_before = conn.execute("SELECT COUNT(*) FROM requests").fetchone()[0]
+            conn.close()
+            reprocessed = process_requests([normal_case], config.CATALOG)
+            conn = storage.ensure_db()
+            count_after = conn.execute("SELECT COUNT(*) FROM requests").fetchone()[0]
+            saved = conn.execute("SELECT status FROM requests WHERE request_id=?", (normal_case["id"],)).fetchone()
+            conn.close()
+            reprocess_checks = {
+                "row_count_unchanged": count_after == count_before,
+                "same_request_remains_ready": saved is not None and saved["status"] == "ready",
+                "one_saved_result_for_id": sum(row["id"] == normal_case["id"] for row in reprocessed) == 1,
+            }
+            report.append({
+                "id": "IDENTICAL-REPROCESS",
+                "expected": {"behavior": "same stable request updates its saved row without adding another"},
+                "observed": {"rows_before": count_before, "rows_after": count_after, "status": saved["status"] if saved else None},
+                "checks": reprocess_checks,
+                "passed": all(reprocess_checks.values()),
+            })
+
             correction = json.loads(config.REFERENCES_PATH.read_text(encoding="utf-8"))["review_correction"]
             expected = correction["expected"]
             try:

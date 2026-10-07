@@ -23,5 +23,119 @@
       ],
       "clarification_draft": "Please confirm the number of individual items requested."
     }
+  },
+  {
+    "timestamp": "2026-10-07T12:29:52.069804+00:00",
+    "request_id": "ASK-6D7373621CD9",
+    "order_ref": "ASK-0868EE95E05B",
+    "source_file": "interactive",
+    "input": "Please send box of  individual CAB-1 cables",
+    "source": "live_groq",
+    "model": "openai/gpt-oss-120b",
+    "response": "{\"product_query\":\"CAB-1\",\"quantity\":null,\"reason\":\"missing quantity\"}",
+    "validated_result": {
+      "status": "needs_clarification",
+      "reason": "missing quantity",
+      "matches": [
+        {
+          "sku": "CAB-1",
+          "name": "USB-C cable 1 m",
+          "unit_cents": 2000
+        }
+      ],
+      "validation_findings": [
+        "No safe positive whole-number item count was extracted."
+      ],
+      "clarification_draft": "Please confirm the number of individual items requested."
+    }
+  },
+  {
+    "timestamp": "2026-10-07T12:30:54.227116+00:00",
+    "request_id": "ASK-B2C7CDA368D1",
+    "order_ref": "ASK-0C85BE680B62",
+    "source_file": "interactive",
+    "input": "Please send 3 USB Hubs",
+    "source": "live_groq",
+    "model": "openai/gpt-oss-120b",
+    "response": "{\"product_query\":\"USB Hubs\",\"quantity\":3,\"reason\":null}",
+    "validated_result": {
+      "status": "needs_clarification",
+      "reason": "unknown product",
+      "matches": [],
+      "validation_findings": [
+        "No catalog entry supports the extracted product phrase."
+      ],
+      "clarification_draft": "Please identify the requested product using a catalog SKU or description."
+    }
+  },
+  {
+    "timestamp": "2026-10-07T12:33:07.140343+00:00",
+    "request_id": "ASK-B2C7CDA368D1",
+    "order_ref": "ASK-0C85BE680B62",
+    "source_file": "interactive",
+    "input": "Please send 3 USB Hubs",
+    "source": "live_groq",
+    "model": "openai/gpt-oss-120b",
+    "response": "{\"product_query\":\"USB hub\",\"quantity\":3,\"reason\":null}",
+    "validated_result": {
+      "status": "ready",
+      "draft": {
+        "order_ref": "ASK-0C85BE680B62",
+        "sku": "HUB-1",
+        "product_name": "USB hub",
+        "quantity": 3,
+        "unit_cents": 5000,
+        "discount_cents": 0,
+        "total_cents": 15000,
+        "currency": "USD",
+        "source": "local catalog"
+      },
+      "matches": [
+        {
+          "sku": "HUB-1",
+          "name": "USB hub",
+          "unit_cents": 5000
+        }
+      ],
+      "validation_findings": [
+        "Product is supported by one local catalog entry; quantity is a positive integer; price was calculated in code."
+      ],
+      "clarification_draft": null
+    }
+  },
+  {
+    "timestamp": "2026-10-07T12:43:19.866947+00:00",
+    "request_id": "ASK-B2C7CDA368D1",
+    "order_ref": "ASK-0C85BE680B62",
+    "source_file": "interactive",
+    "input": "Please send 3 USB Hubs",
+    "source": "live_groq",
+    "model": "openai/gpt-oss-120b",
+    "response": "{\"product_query\":\"USB Hubs\",\"quantity\":3,\"reason\":null}",
+    "validated_result": {
+      "status": "ready",
+      "draft": {
+        "order_ref": "ASK-0C85BE680B62",
+        "sku": "HUB-1",
+        "product_name": "USB hub",
+        "quantity": 3,
+        "unit_cents": 5000,
+        "discount_cents": 0,
+        "total_cents": 15000,
+        "currency": "USD",
+        "source": "local catalog"
+      },
+      "matches": [
+        {
+          "sku": "HUB-1",
+          "name": "USB hub",
+          "unit_cents": 5000
+        }
+      ],
+      "validation_findings": [
+        "Product is supported by one local catalog entry; quantity is a positive integer; price was calculated in code."
+      ],
+      "clarification_draft": null
+    }
   }
 ]

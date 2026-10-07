@@ -19,4 +19,4 @@ REPLAY_PATH = ROOT / "replayed_model_results.json"
 REFERENCE_REPORT_PATH = ROOT / "reference-check-report.json"
 
 CATALOG = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))["catalog"]
-MODEL_NAME = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+MODEL_NAME = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")

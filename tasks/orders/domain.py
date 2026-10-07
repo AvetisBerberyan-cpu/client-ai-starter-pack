@@ -29,7 +29,11 @@ def local_catalog_lookup(query: str | None, catalog: list[dict[str, Any]]) -> li
     matches = []
     for item in catalog:
         catalog_text = canonical(item["sku"] + " " + item["name"])
-        if words.issubset(set(catalog_text.split())):
+        catalog_words = set(catalog_text.split())
+        if all(
+            word in catalog_words or (word.endswith("s") and word[:-1] in catalog_words)
+            for word in words
+        ):
             matches.append(item)
     return matches
 

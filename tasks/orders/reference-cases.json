@@ -1,0 +1,76 @@
+{
+  "generation_method": "Handwritten fictional cases derived from the supplied catalog and domain rules. Expected values below were calculated independently from unit prices, quantities, the 10-item discount threshold, and the stated duplicate rule.",
+  "cases": [
+    {
+      "id": "REF-NORMAL",
+      "order_ref": "REF-NORMAL",
+      "text": "Please send 2 individual CAB-1 cables.",
+      "expected": {
+        "status": "ready",
+        "sku": "CAB-1",
+        "quantity": 2,
+        "total_cents": 4000
+      }
+    },
+    {
+      "id": "REF-BULK",
+      "order_ref": "REF-BULK",
+      "text": "Please send ten individual CAB-1 cables.",
+      "expected": {
+        "status": "ready",
+        "sku": "CAB-1",
+        "quantity": 10,
+        "total_cents": 18000
+      }
+    },
+    {
+      "id": "REF-UNKNOWN",
+      "order_ref": "REF-UNKNOWN",
+      "text": "Please send one Moon adapter.",
+      "expected": {
+        "status": "needs_clarification",
+        "reason": "unknown product"
+      }
+    },
+    {
+      "id": "REF-BOXES",
+      "order_ref": "REF-BOXES",
+      "text": "Please send 2 boxes of CAB-1 cables.",
+      "expected": {
+        "status": "needs_clarification",
+        "reason": "ambiguous quantity"
+      }
+    },
+    {
+      "id": "REF-DUPLICATE-1",
+      "order_ref": "REF-DUPLICATE",
+      "text": "Please send 2 individual HUB-1 USB hubs.",
+      "expected": {
+        "status": "ready",
+        "sku": "HUB-1",
+        "quantity": 2,
+        "total_cents": 10000
+      }
+    },
+    {
+      "id": "REF-DUPLICATE-2",
+      "order_ref": "REF-DUPLICATE",
+      "text": "Please send 2 individual HUB-1 USB hubs.",
+      "expected": {
+        "status": "duplicate",
+        "reason": null
+      }
+    }
+  ],
+  "review_correction": {
+    "request_id": "REF-NORMAL",
+    "field": "quantity",
+    "value": "12",
+    "expected": {
+      "status": "ready",
+      "quantity": 12,
+      "total_cents": 21600,
+      "discount_cents": 2400
+    }
+  }
+}
