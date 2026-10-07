@@ -57,6 +57,23 @@ python tasks/orders/main.py --review REQUEST_ID --field quantity --value 12
 python tasks/orders/main.py --review REQUEST_ID --field sku --value CAB-2
 ```
 
+## Command-line arguments
+
+| Argument | Explanation |
+| --- | --- |
+| `--check` | Runs the live reference scenarios and checks normal and bulk pricing, unknown products, ambiguous package quantities, duplicate references, reprocessing the same request ID, and a reviewer correction. Requires a working Groq configuration. |
+| `--replay-calls` | Revalidates saved responses marked `live_groq`; makes no model calls and does not change the order queue. |
+| `--serve` | Starts the local review queue web server. Use `--host` and `--port` to change its bind address. |
+| `--ask [TEXT]` | Processes one order message. Supply `TEXT` directly or omit it to be prompted. |
+| `--order-ref REF` | Optional order reference for `--ask`. If omitted, the app derives a stable reference from the message. |
+| `--review REQUEST_ID` | Selects a saved draft for correction; use together with `--field` and `--value`. |
+| `--field FIELD` | Selects the draft field to correct with `--review`. Allowed values are `sku` and `quantity`. |
+| `--value VALUE` | Replacement value for the selected field. A quantity must be a positive whole number; a SKU must exist in the catalog. |
+| `--host ADDRESS` | Host address for `--serve`; defaults to `127.0.0.1`, which keeps the server local to the machine. |
+| `--port NUMBER` | TCP port for `--serve`; defaults to `8765`. |
+
+Run `python tasks/orders/main.py --help` to see the built-in argument summary.
+
 ## Verify behavior
 
 Run five independently specified reference behaviors. This makes live model calls for the normal and bulk-price orders, unknown product, ambiguous package quantity, and duplicate order reference; it also reprocesses a stable request ID and applies a reviewer correction to the normal draft.

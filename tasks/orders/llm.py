@@ -44,19 +44,25 @@ def model_client():
     )
 
 
-def extract_order(request_text: str, catalog: list[dict[str, Any]]) -> dict[str, Any]:
-    """Extract an item phrase and explicit count; validate the response schema."""
+def extract_order(
+    request_text: str, catalog: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Extract an item phrase and count; validate the response schema."""
     system = (
-        "Extract one order line from the email. Return JSON with exactly these keys: "
-        "product_query, quantity, reason. product_query is a short phrase copied "
-        "from the requested item, or null if absent. quantity is a positive integer "
-        "count of individual items, or null if absent/unclear. Never infer box or "
+        "Extract one order line from the email. Return JSON with exactly "
+        "these keys: product_query, quantity, reason. product_query is a "
+        "short phrase copied from the requested item, or null if absent. "
+        "quantity is a positive integer count of individual items, or null "
+        "if absent/unclear. Never infer box or "
         "pack sizes. For unclear product or quantity, reason must be one of "
-        "unknown product, ambiguous product, ambiguous quantity, missing quantity; "
+        "unknown product, ambiguous product, ambiguous quantity, "
+        "missing quantity; "
         "otherwise reason is null. Do not choose a SKU. Catalog context: "
         + json.dumps(catalog)
     )
-    response = model_client().invoke([("system", system), ("human", request_text)])
+    response = model_client().invoke(
+        [("system", system), ("human", request_text)]
+    )
     raw = response.content
 
     if not isinstance(raw, str):
